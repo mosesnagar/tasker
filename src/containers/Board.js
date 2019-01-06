@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-class App extends Component {
+class Board extends Component {
 
     render() {
         return (
@@ -12,12 +12,12 @@ class App extends Component {
     }
 }
 
-App.PropTypes = {
+Board.PropTypes = {
     //props 
 };
 
-App.defaultProps = {
+Board.defaultProps = {
     //props default value
 };
 
-export default App;
+export default Board;
