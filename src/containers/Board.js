@@ -23,6 +23,12 @@ class Board extends Component {
          }))
     };
 
+    handleDelete = (id) => {
+        this.setState( prevState => ({
+             all: [...prevState.all.filter(el => el.id !== id )]
+            }))
+    };
+
     render() {
         const tasks = this.state.all.map((task)=>
                 <TaskCard key={task.id}content={task}/>
@@ -31,7 +37,7 @@ class Board extends Component {
             <div className="container">
                 {
                     this.state.all.map((task)=>
-                        <TaskCard key={task.id} content={task}/>
+                        <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
                     )
                 }
                 <input type="button" onClick={this.addTask}/>

@@ -11,12 +11,14 @@ function TaskCard(props) {
                     {props.content.name}
                 </div>
             </div>
+            <button type="button" className="btn btn-primary" onClick={props.handleDelete}>Delete</button>
         </div>
     );
 }
 
 TaskCard.PropTypes = {
-    content: PropTypes.object
+    content: PropTypes.object,
+    handleDelete:PropTypes.function
 };
 
 TaskCard.defaultProps = {
