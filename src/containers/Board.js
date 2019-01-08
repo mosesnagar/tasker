@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import TaskCard from "../views/TaskCard";
+import {Button, Grid, Row} from "react-bootstrap";
+import Col from "react-bootstrap/es/Col";
+import Carousel from "react-bootstrap/es/Carousel";
 
 class Board extends Component {
 
@@ -23,25 +26,61 @@ class Board extends Component {
          }))
     };
 
+    deleteAll = () => {
+      this.setState({
+          all : []
+      })
+    };
+
     handleDelete = (id) => {
         this.setState( prevState => ({
              all: [...prevState.all.filter(el => el.id !== id )]
             }))
     };
 
+
     render() {
         const tasks = this.state.all.map((task)=>
                 <TaskCard key={task.id}content={task}/>
         );
         return (
-            <div className="container">
-                {
-                    this.state.all.map((task)=>
-                        <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
-                    )
-                }
-                <input type="button" onClick={this.addTask}/>
+            <div>
+                <Grid>
+                    <Row>
+                        <Col   >
+                            <Button  bsStyle="primary" onClick={this.addTask}>Add</Button>
+                        </Col>
+                        <Col>
+                            <Button  bsStyle="primary" onClick={this.deleteAll}>Delete All</Button>
+
+                        </Col>
+
+                    </Row>
+                    {
+                        this.state.all.map((task)=>
+                            <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
+                        )
+                    }
+                </Grid>
             </div>
+            // <div className="container">
+            //     {/*<div className="row col-5  col-md-5 offset-md-4  col-lg-5 offset-md-1 col-sm-7 offset-sm-3">*/}
+            //     <div className="row">
+            //         <div className=" col-1 offset-5">
+            //             <Button bsStyle="primary" onClick={this.addTask}>Add</Button>
+            //         </div>
+            //
+            //         <div className=" ">
+            //             <Button bsStyle="primary" onClick={this.deleteAll}>Delete All</Button>
+            //         </div>
+            //
+            //     </div>
+            //     {
+            //         this.state.all.map((task)=>
+            //             <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
+            //         )
+            //     }
+            // </div>
         );
     }
 }

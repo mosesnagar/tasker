@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import {Button} from "react-bootstrap";
 
 function TaskCard(props) {
     return (
         <div className="row m-2">
-            <div className="card col-sm-4 offset-sm-4 ">
+            <div className="card col-md-5 offset-md-4  col-lg-4 offset-md-4 col-sm-6 offset-sm-3 ">
                 <div className="card-body ">
                     <h5 className="card-title">Task No. {props.content.id}</h5>
                     {props.content.name}
+                    <Button className="float-right" bsStyle="primary" onClick={props.handleDelete}>Delete</Button>
                 </div>
             </div>
-            <button type="button" className="btn btn-primary" onClick={props.handleDelete}>Delete</button>
         </div>
     );
 }
