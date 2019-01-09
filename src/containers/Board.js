@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import TaskCard from "../views/TaskCard";
-import {Button, Grid, Row} from "react-bootstrap";
-import Col from "react-bootstrap/es/Col";
-import Carousel from "react-bootstrap/es/Carousel";
+import {Container, Row, Col} from "reactstrap";
 
 class Board extends Component {
 
@@ -11,76 +9,35 @@ class Board extends Component {
         super(props);
         this.state = {
             all: [
-                {name:'task 1', id:'1',},
-                {name:'task 2', id:'2',},
-                {name:'task 3', id:'3',},
-                {name:'task 4', id:'4',}
-                ]
+                {name: 'task 1', id: '1',},
+                {name: 'task 2', id: '2',},
+                {name: 'task 3', id: '3',},
+                {name: 'task 4', id: '4',}
+            ]
         }
     }
 
-    addTask = () => {
-        const a = {name: 'task 5', id: 5};
-         this.setState( prevState => ({
-             all: [...prevState.all, a]
-         }))
-    };
-
-    deleteAll = () => {
-      this.setState({
-          all : []
-      })
-    };
-
-    handleDelete = (id) => {
-        this.setState( prevState => ({
-             all: [...prevState.all.filter(el => el.id !== id )]
-            }))
-    };
-
-
     render() {
-        const tasks = this.state.all.map((task)=>
-                <TaskCard key={task.id}content={task}/>
-        );
         return (
             <div>
-                <Grid>
-                    <Row>
-                        <Col   >
-                            <Button  bsStyle="primary" onClick={this.addTask}>Add</Button>
+                <Container>
+                    <Row >
+                        <Col xs={{size:2,offset:1}} md={{size: 1,offset:4}}>
+                            aaaa
                         </Col>
-                        <Col>
-                            <Button  bsStyle="primary" onClick={this.deleteAll}>Delete All</Button>
-
+                        <Col xs={{size:2,offset:5}} md={{size: 1,offset:2}}>
+                            aaaaa
                         </Col>
 
                     </Row>
-                    {
-                        this.state.all.map((task)=>
-                            <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
-                        )
-                    }
-                </Grid>
+                </Container>
+
+                {
+                    this.state.all.map((task) =>
+                        <TaskCard key={task.id} content={task}/>
+                    )
+                }
             </div>
-            // <div className="container">
-            //     {/*<div className="row col-5  col-md-5 offset-md-4  col-lg-5 offset-md-1 col-sm-7 offset-sm-3">*/}
-            //     <div className="row">
-            //         <div className=" col-1 offset-5">
-            //             <Button bsStyle="primary" onClick={this.addTask}>Add</Button>
-            //         </div>
-            //
-            //         <div className=" ">
-            //             <Button bsStyle="primary" onClick={this.deleteAll}>Delete All</Button>
-            //         </div>
-            //
-            //     </div>
-            //     {
-            //         this.state.all.map((task)=>
-            //             <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
-            //         )
-            //     }
-            // </div>
         );
     }
 }
