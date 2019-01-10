@@ -1,10 +1,20 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {
+    Navbar,
+    NavbarBrand,
+    Card,
+    CardHeader,
+    CardBody,
+    Container,
+    ListGroup,
+} from 'reactstrap';
 import TaskCard from "../views/TaskCard";
-import {Container, Row, Col, Button} from "reactstrap";
+import Col from "reactstrap/es/Col";
+import ListHandlers from "../views/ListHandlers";
+
 
 class Board extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -15,49 +25,75 @@ class Board extends Component {
                 {name: 'task 4', id: '4',}
             ]
         }
+
+        this.taskInput = React.createRef();
+
     }
 
     addTask = () => {
-        const a = {name: 'task 5', id: 5};
-        this.setState( prevState => ({
-            all: [...prevState.all, a]
-        }))
+        const size = this.state.all.length + 1;
+        const content = this.taskInput.current.value;
+        if (content != '') {
+            const task = {name: content, id: size};
+            this.setState(prevState => ({
+                all: [...prevState.all, task]
+            }))
+            this.taskInput.current.value = "";
+        }
+
     };
 
     deleteAll = () => {
         this.setState({
-            all : []
+            all: []
         })
     };
 
     handleDelete = (id) => {
-        this.setState( prevState => ({
-            all: [...prevState.all.filter(el => el.id !== id )]
+        this.setState(prevState => ({
+            all: [...prevState.all.filter(el => el.id !== id)]
         }))
+    };
+
+    handleKeyPress = (target) => {
+        if (target.charCode == 13) {
+            this.addTask();
+        }
     };
 
     render() {
         return (
             <div>
+                <Navbar color="light">
+                    <NavbarBrand>Tasker</NavbarBrand>
+                </Navbar>
                 <Container>
-                    <Row>
+                    <Col md={{size: 8, offset: 2}}>
+                        <Card>
+                            <CardHeader>
 
-                    </Row>
-                    <Row >
-                        <Col xs={{size:1,offset:1}} md={{size: 1,offset:4}}>
-                            <Button color="primary" onClick={this.addTask}>Add</Button>
-                        </Col>
-                        <Col xs={{size:5,offset:4}} md={{size: 4,offset:2}}>
-                            <Button color="danger" onClick={this.deleteAll}>Delete All</Button>
-                        </Col>
-                    </Row>
+                                <ListHandlers addTask={this.addTask.bind(this)}
+                                              handleDeleteAll={this.deleteAll.bind(this)}
+                                              refToInput={this.taskInput}
+                                              handleKeyPress={this.handleKeyPress.bind(this)}/>
+
+                            </CardHeader>
+                            <CardBody>
+                                <ListGroup>
+                                    {
+                                        this.state.all.map((task) =>
+                                            <TaskCard key={task.id} content={task}
+                                                      handleDelete={this.handleDelete.bind(this,task.id)}/>
+                                        )
+                                    }
+                                </ListGroup>
+
+                            </CardBody>
+                        </Card>
+                    </Col>
+
                 </Container>
 
-                {
-                    this.state.all.map((task) =>
-                        <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
-                    )
-                }
             </div>
         );
     }
