@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import TaskCard from "../views/TaskCard";
-import {Container, Row, Col} from "reactstrap";
+import {Container, Row, Col, Button} from "reactstrap";
 
 class Board extends Component {
 
@@ -17,24 +17,45 @@ class Board extends Component {
         }
     }
 
+    addTask = () => {
+        const a = {name: 'task 5', id: 5};
+        this.setState( prevState => ({
+            all: [...prevState.all, a]
+        }))
+    };
+
+    deleteAll = () => {
+        this.setState({
+            all : []
+        })
+    };
+
+    handleDelete = (id) => {
+        this.setState( prevState => ({
+            all: [...prevState.all.filter(el => el.id !== id )]
+        }))
+    };
+
     render() {
         return (
             <div>
                 <Container>
-                    <Row >
-                        <Col xs={{size:2,offset:1}} md={{size: 1,offset:4}}>
-                            aaaa
-                        </Col>
-                        <Col xs={{size:2,offset:5}} md={{size: 1,offset:2}}>
-                            aaaaa
-                        </Col>
+                    <Row>
 
+                    </Row>
+                    <Row >
+                        <Col xs={{size:1,offset:1}} md={{size: 1,offset:4}}>
+                            <Button color="primary" onClick={this.addTask}>Add</Button>
+                        </Col>
+                        <Col xs={{size:5,offset:4}} md={{size: 4,offset:2}}>
+                            <Button color="danger" onClick={this.deleteAll}>Delete All</Button>
+                        </Col>
                     </Row>
                 </Container>
 
                 {
                     this.state.all.map((task) =>
-                        <TaskCard key={task.id} content={task}/>
+                        <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
                     )
                 }
             </div>
