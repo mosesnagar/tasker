@@ -23,7 +23,7 @@ function ListHandlers(props) {
                     <Button color="danger" onClick={props.handleDeleteAll}>Delete All</Button>
                 </Col>
                 <Col md={{size: 1}} xs={{size:4}}>
-                    <Button color="success">Shuffle</Button>
+                    <Button color="success" onClick={props.handleShuffle}>Shuffle</Button>
                 </Col>
             </Row>
         </div>
