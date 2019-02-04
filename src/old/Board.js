@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import TaskCard from "../views/TaskCard";
+import TaskCar1d from "./TaskCar1d";
 import {Button, Grid, Row} from "react-bootstrap";
 import Col from "react-bootstrap/es/Col";
 
@@ -41,7 +41,7 @@ class Board extends Component {
 
     render() {
         const tasks = this.state.all.map((task)=>
-                <TaskCard key={task.id}content={task}/>
+                <TaskCar1d key={task.id} content={task}/>
         );
         return (
             <div>
@@ -58,7 +58,7 @@ class Board extends Component {
                     </Row>
                     {
                         this.state.all.map((task)=>
-                            <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
+                            <TaskCar1d key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
                         )
                     }
                 </Grid>
@@ -77,7 +77,7 @@ class Board extends Component {
             //     </div>
             //     {
             //         this.state.all.map((task)=>
-            //             <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
+            //             <TaskCar1d key={task.id} content={task} handleDelete={this.handleDelete.bind(this,task.id)}/>
             //         )
             //     }
             // </div>

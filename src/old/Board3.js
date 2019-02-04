@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import TaskCard from "../views/TaskCard";
+import TaskCar1d from "./TaskCar1d";
 import {Container, Row, Col, Button, Form, FormGroup, Input} from "reactstrap";
 
 class Board3 extends Component {
@@ -70,7 +70,7 @@ class Board3 extends Component {
 
                 {
                     this.state.all.map((task) =>
-                        <TaskCard key={task.id} content={task} handleDelete={this.handleDelete.bind(this, task.id)}/>
+                        <TaskCar1d key={task.id} content={task} handleDelete={this.handleDelete.bind(this, task.id)}/>
                     )
                 }
             </div>

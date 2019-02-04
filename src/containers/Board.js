@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import fire from '../fire';
+
 import PropTypes from 'prop-types';
 import {
     Navbar,
@@ -9,51 +11,72 @@ import {
     Container,
     ListGroup,
 } from 'reactstrap';
-import TaskCard from "../views/TaskCard";
 import Col from "reactstrap/es/Col";
 import ListHandlers from "../views/ListHandlers";
-
+import TaskCard from "./TaskCard"
 
 class Board extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            all: [
-                {name: 'task 1', id: '1', order: 1},
-                {name: 'task 2', id: '2', order: 2},
-                {name: 'task 3', id: '3', order: 3},
-                {name: 'task 4', id: '4', order: 4}
-            ]
-        }
 
-        this.taskInput = React.createRef();
+    taskInput = React.createRef();
 
-    }
+    taskRef = fire.database().ref('tasks');
+
+    state = {
+        all: {},
+        size: 0,
+    };
+
+    componentWillMount = () => {
+        this.taskRef.on('value', data => {
+            this.setState({
+                all: data.val(),
+                size: data.numChildren()
+            })
+        });
+
+        this.taskRef.on('child_changed', (data, key) => {
+            console.log(data.val());
+            console.log(data.numChildren());
+            console.log(key);
+            let updated = data.val();
+            this.setState(prevState => ({
+                all: {
+                    ...prevState,
+                    [key]: {updated}
+                },
+                size: prevState.size
+            }))
+        });
+
+    };
+
+    componentWillUnmount = () => {
+        fire.removeBinding(this.taskRef)
+    };
+
 
     addTask = () => {
-        const size = this.state.all.length + 1;
-        const order = this.state.all.length + 1;
         const content = this.taskInput.current.value;
+        const size = this.state.size;
+        console.log(size);
         if (content !== '') {
-            const task = {name: content, id: size, order: order};
-            this.setState(prevState => ({
-                all: [...prevState.all, task]
-            }))
+            const task = {name: content, order: size, time: 0};
+            this.taskRef.push(task);
             this.taskInput.current.value = "";
+            this.taskInput.current.focus();
+
         }
 
     };
 
     deleteAll = () => {
-        this.setState({
-            all: []
-        })
+        this.taskRef.remove();
     };
 
     handleDelete = (id) => {
-        this.setState(prevState => ({
-            all: [...prevState.all.filter(el => el.id !== id)]
-        }))
+        this.taskRef.update({
+            [id]: null
+        })
     };
 
     handleKeyPress = (target) => {
@@ -63,59 +86,106 @@ class Board extends Component {
     };
 
     shuffle = () => {
-        let arr = this.state.all;
+        if (this.state.size < 2) return false;
+        let arr = Array.from(Array(this.state.size).keys());
+        const tasks = this.state.all;
+        console.log(tasks);
+
+        let keys = Object.keys(this.state.all);
         for (let i = 0; i < arr.length; i++) {
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        arr.map((task,id) => {
-            task.order = id;
-        });
-        this.setState(prevState => ({
-            all: arr
-        }));
+
+        let updates = {};
+        for (let i in arr) {
+            updates[keys[i]] = {
+                ...this.state.all[keys[i]],
+                order: arr[i]
+            };
+        }
+        this.taskRef.update(updates);
+
+    };
+
+    taskClick = (id) => {
+        // let arr = this.state.all;
+        // arr.map((task) => {
+        //     if (task.id === id) {
+        //         task.time++;
+        //     }
+        // });
+        // this.setState(prevState => ({
+        //     all: prevState.all
+        // }));
+    };
+
+    handleTaskClick = (id) => {
+        setInterval(() => {
+            this.taskClick(id)
+        }, 10000)
+    };
+
+    generatePropsListHanlder = () => ({
+        addTask: this.addTask,
+        handleDeleteAll: this.deleteAll,
+        refToInput: this.taskInput,
+        handleKeyPress: this.handleKeyPress,
+        handleShuffle: this.shuffle
+
+    });
+
+    generateList = () => {
+        const tasks = this.state.all;
+        let list = [];
+
+        for (let task in tasks) {
+            list.push(
+                <TaskCard key={task}
+                          content={tasks[task]}
+                          handleDelete={this.handleDelete.bind(this, task)}
+                          onTaskClick={this.handleTaskClick.bind(this, task)}
+                />
+            );
+        }
+        console.log(list);
+        return list;
     };
 
     render() {
+        const propsListHandler = this.generatePropsListHanlder();
 
-        let div = (
-            <div>
-                <Navbar color="light">
-                    <NavbarBrand>Tasker</NavbarBrand>
-                </Navbar>
-                <Container>
-                    <Col md={{size: 8, offset: 2}}>
-                        <Card>
-                            <CardHeader>
 
-                                <ListHandlers addTask = {this.addTask.bind(this)}
-                                              handleDeleteAll ={this.deleteAll.bind(this)}
-                                              refToInput ={this.taskInput}
-                                              handleKeyPress = {this.handleKeyPress.bind(this)}
-                                              handleShuffle = {this.shuffle.bind(this)}/>
+        return <div>
+            <Navbar color="light">
+                <NavbarBrand>Tasker</NavbarBrand>
+            </Navbar>
+            <Container>
+                <Col md={{size: 8, offset: 2}}>
+                    <Card>
+                        <CardHeader>
+                            <ListHandlers {...propsListHandler}/>
+                        </CardHeader>
+                        <CardBody>
+                            <ListGroup>
+                                {
+                                    this.generateList().sort(function (a, b) {
+                                        console.log(a);
+                                        return b.props.content.order - a.props.content.order;
+                                    })
 
-                            </CardHeader>
-                            <CardBody>
-                                <ListGroup>
-                                    {
-                                        this.state.all.sort(function(a,b) {
-                                            return b.order - a.order;
-                                        }).map((task) =>
-                                            <TaskCard key={task.id} content={task}
-                                                      handleDelete={this.handleDelete.bind(this, task.id)}/>
-                                        )
-                                    }
-                                </ListGroup>
+                                }
+                            </ListGroup>
 
-                            </CardBody>
-                        </Card>
-                    </Col>
+                        </CardBody>
+                    </Card>
+                </Col>
 
-                </Container>
+            </Container>
 
-            </div>
-        );
-        return div;
+        </div>
+
+
     }
 }
 
