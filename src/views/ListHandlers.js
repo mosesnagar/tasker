@@ -1,41 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Col, FormGroup, Input, Row} from "reactstrap";
+import {Col, FormGroup, Input, Row} from "reactstrap";
+import ListButton from "./ListButton";
 
 function ListHandlers(props) {
     return (
         <div>
             <Row>
                 <Col md={{size: 5}} xs={{size:7}} >
-                    <FormGroup>
+
                         <Input type="text"
                                name="task"
                                innerRef={props.refToInput}
                                placeholder="Add new task..."
                                onKeyPress={props.handleKeyPress} />
-                    </FormGroup>
+
 
                 </Col>
-                <Col md={{size: 2}} xs={{size:5}}>
-                    <Button color="primary" onClick={props.addTask}>Add</Button>
-                </Col>
-                <Col md={{size: 3}} xs={{size:7}}>
-                    <Button color="danger" onClick={props.handleDeleteAll}>Delete All</Button>
-                </Col>
-                <Col md={{size: 1}} xs={{size:4}}>
-                    <Button color="success" onClick={props.handleShuffle}>Shuffle</Button>
-                </Col>
+
+                <ListButton value={'Add'}
+                            type={"primary"}
+                            clickHandler={props.addTask}
+                            mdSize={2}
+                            xsSize={5}
+                />
+
+                <ListButton value={'Delete All'}
+                            type={"danger"}
+                            clickHandler={props.handleDeleteAll}
+                            mdSize={3}
+                            xsSize={7}
+                />
+
+                <ListButton value={"Shuffle"}
+                            type={"success"}
+                            clickHandler={props.handleShuffle}
+                            mdSize={1}
+                            xsSize={4}
+                />
             </Row>
         </div>
     );
 }
 
 ListHandlers.PropTypes = {
-    //props 
+    addTask: PropTypes.func.isRequired,
+    handleDeleteAll: PropTypes.func.isRequired,
+    refToInput: PropTypes.object.isRequired,
+    handleKeyPress: PropTypes.func.isRequired,
+    handleShuffle: PropTypes.func.isRequired
 };
 
-ListHandlers.defaultProps = {
-    //props default value
-};
 
 export default ListHandlers;
