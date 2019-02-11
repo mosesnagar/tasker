@@ -1,7 +1,7 @@
 # Tasker
+Tasker is a TODO-List with 'Shuffle' thing. 
 Tasker use firebase as database to store your tasks.
 ## Introduction
-Tasker is a TODO-List with 'Shuffle' thing. 
 We all use todo-list for storing lists, but in the end of adding we have so many tasks and we don't know where to start from. Here comes the shuffiling. 
 By shuffling the list you can get a random-order to your tasks, so you don't need to thing about the order of the tasks - just start do them.
 
